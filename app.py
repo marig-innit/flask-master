@@ -27,7 +27,7 @@ def signup():
     cursor = connection.cursor()
 
     # Define SQL to insert user
-    sql = "insert into users(username, password, email, phone )values(%s,%s,%s,%s)"
+    sql = "insert into user(username, password, email, phone )values(%s,%s,%s,%s)"
 
     # Define your data 
     # NB: coming from step 3
@@ -80,10 +80,42 @@ def signin():
          return jsonify({"message":"Login successful", "user" : user}) 
 
 
+# Define the route/endpoint 
+@app.route("/api/product_details" , methods=["POST"])
+
+# Define the function 
+def product_details():
+    #  Get user inputs from the form 
+    name = request.form["product_name"]
+    description = request.form["product_description"]
+    cost = request.form["product_cost"]
+    category = request.form["product_category"]
+   
+
+    # Connection to database
+    connection = pymysql.connect(
+        host = "localhost",
+        user = "root",
+        password = "",
+        database = "modcomgrace")
+    
+    # Define the cursor
+    cursor  = connection.cursor()
+    # Define SQL to insert product_details
+    sql = "insert into  product_details(product_name,product_description,product_cost,product_category) values(%s,%s,%s,%s)"
+
+    # Define your data
+    data = (name,description,cost,category)
+
+    # execute/run query
+    cursor.execute(sql,data)
+
+    # commit/save changes
+    connection.commit()
+    return jsonify({"message":"Product details added successfully"}) 
+             
+    
   
-    
-    
- 
 
 
 
@@ -104,31 +136,7 @@ def signin():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
  # run the application
 app.run(debug=True)
 
